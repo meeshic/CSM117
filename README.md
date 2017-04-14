@@ -4,11 +4,11 @@ Completed for CS M117 during the Spring 2017 quarter at UCLA.
 
 Team: 
 
-* Breanna Nery
-* Ky-Cuong Huynh
+* [Breanna Nery](https://github.com/binerys)
+* [Ky-Cuong Huynh](https://github.com/KyCodeHuynh)
 * Lauren Yeung
-* Leslie Lam
-* Michelle Chang
+* [Leslie Lam](https://github.com/llam15)
+* [Michelle Chang](https://github.com/meeshic)
 
 TA: 
 
