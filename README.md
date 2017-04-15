@@ -6,7 +6,7 @@ Team:
 
 * [Breanna Nery](https://github.com/binerys)
 * [Ky-Cuong Huynh](https://github.com/KyCodeHuynh)
-* Lauren Yeung
+* [Lauren Yeung](https://github.com/laurenyeung)
 * [Leslie Lam](https://github.com/llam15)
 * [Michelle Chang](https://github.com/meeshic)
 
