@@ -34,4 +34,12 @@
         android:text="Hint"
         tools:layout_editor_absoluteX="150dp"
         tools:layout_editor_absoluteY="250dp" />
+
+    <Button
+        android:id="@+id/button_Dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
 </android.support.constraint.ConstraintLayout>

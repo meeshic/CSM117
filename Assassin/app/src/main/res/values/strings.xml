@@ -6,4 +6,6 @@
     <string name="button_create">Create Game</string>
     <string name="button_join">Join Game</string>
     <string name="button_exit">Exit Lobby</string>
+    <string name="player_dead">You died.</string>
+    <string name="exit_game">Exit</string>
 </resources>
