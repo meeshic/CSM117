@@ -13,15 +13,15 @@
         android:ems="10"
         android:hint="@string/enter_username"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="72dp"
-        tools:layout_editor_absoluteY="142dp" />
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="145dp" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:onClick="setUsername"
-        tools:layout_editor_absoluteX="136dp"
-        tools:layout_editor_absoluteY="203dp"
+        tools:layout_editor_absoluteX="130dp"
+        tools:layout_editor_absoluteY="215dp"
         tools:text="@string/button_enter" />
 </android.support.constraint.ConstraintLayout>
