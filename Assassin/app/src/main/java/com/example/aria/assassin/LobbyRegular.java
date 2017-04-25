@@ -2,11 +2,11 @@ package com.example.aria.assassin;
 
 import android.os.Bundle;
 
-public class LobbyGM extends LobbyBase {
+public class LobbyRegular extends LobbyBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lobby_gm);
+        setContentView(R.layout.activity_lobby_regular);
 
         setUpView();
     }

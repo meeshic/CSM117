@@ -8,4 +8,6 @@
     <string name="button_exit">Exit Lobby</string>
     <string name="player_dead">You died.</string>
     <string name="exit_game">Exit</string>
+    <string name="players">Players</string>
+    <string name="title_activity_lobby_regular">LobbyRegular</string>
 </resources>

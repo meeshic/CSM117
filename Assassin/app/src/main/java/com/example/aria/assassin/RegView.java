@@ -16,14 +16,14 @@ public class RegView extends AppCompatActivity{
     }
 
 
-    protected void (){
-        Button btnExample = (Button) findViewById(R.id/button_Dashboard);
-        btnExample.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Do something here
-            }
-        });
+//    protected void testButton(){
+//        Button btnExample = (Button) findViewById(R.id/button_Dashboard);
+//        btnExample.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Do something here
+//            }
+//        });
     }
 
 }
