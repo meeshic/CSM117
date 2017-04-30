@@ -13,6 +13,7 @@
         android:inputType="textPersonName"
         android:text="Winner:"
         android:gravity="center"
+        android:background="@android:color/transparent"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="140dp" />
 
@@ -21,8 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:gravity="center"
+        android:background="@android:color/transparent"
         android:inputType="textPersonName"
-        android:text="@string/enter_username"
+        android:text="@string/winner_name"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="180dp" />
 

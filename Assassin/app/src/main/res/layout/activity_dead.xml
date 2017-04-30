@@ -13,6 +13,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="@string/player_dead"
+        android:background="@android:color/transparent"
         android:gravity="center"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="140dp" />

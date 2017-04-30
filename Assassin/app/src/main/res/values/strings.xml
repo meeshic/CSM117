@@ -7,7 +7,10 @@
     <string name="button_join">Join Game</string>
     <string name="button_exit">Exit Lobby</string>
     <string name="player_dead">You died.</string>
-    <string name="exit_game">Exit</string>
+    <string name="exit_game">Exit Game</string>
     <string name="players">Players</string>
+    <string name="winner_name">Mr. Weiner</string>
+    <string name="target_name">Mr. Bob</string>
     <string name="title_activity_lobby_regular">LobbyRegular</string>
+    <string name="kill_button">Kill</string>
 </resources>

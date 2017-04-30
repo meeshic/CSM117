@@ -7,13 +7,15 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/Plain"
+        android:id="@+id/targetText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Target:"
         android:gravity="center"
+        android:inputType="textPersonName"
+        android:singleLine="false"
+        android:background="@android:color/transparent"
+        android:text="Target:"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="140dp" />
 
@@ -22,8 +24,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:gravity="center"
+        android:background="@android:color/transparent"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text="@string/target_name"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="180dp" />
 

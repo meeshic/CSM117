@@ -13,6 +13,7 @@
         android:inputType="textPersonName"
         android:text="Target:"
         android:gravity="center"
+        android:background="@android:color/transparent"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="140dp" />
 
@@ -22,7 +23,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/enter_username"
+        android:gravity="center"
+        android:text="@string/target_name"
+        android:background="@android:color/transparent"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="180dp" />
 
@@ -30,7 +33,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="KILL"
+        android:text="@string/kill_button"
         tools:layout_editor_absoluteX="150dp"
         tools:layout_editor_absoluteY="250dp" />
 </android.support.constraint.ConstraintLayout>
