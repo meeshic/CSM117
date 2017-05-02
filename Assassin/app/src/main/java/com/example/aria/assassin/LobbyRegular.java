@@ -15,8 +15,4 @@ public class LobbyRegular extends LobbyBase {
     public void onBackPressed() {
         exitLobby();
     }
-
-    public void exitLobby() {
-        // Tell server this player is leaving
-    }
 }

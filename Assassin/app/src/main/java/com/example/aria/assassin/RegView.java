@@ -25,6 +25,6 @@ public class RegView extends AppCompatActivity{
 //                // Do something here
 //            }
 //        });
-    }
+//    }
 
 }

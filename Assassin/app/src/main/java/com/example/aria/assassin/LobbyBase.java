@@ -45,5 +45,7 @@ public abstract class LobbyBase extends AppCompatActivity {
         listview.setAdapter(playersAdapter);
     }
 
-    public abstract void exitLobby();
+    public void exitLobby() {
+        // Tell server player is leaving?
+    }
 }

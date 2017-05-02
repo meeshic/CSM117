@@ -16,7 +16,8 @@ public class LobbyGM extends LobbyBase {
         exitLobby();
     }
 
-    public void exitLobby() {
-        // Tell server this player is leaving
+    public void startGame() {
+        // Tell server to start game
+
     }
 }
