@@ -15,8 +15,12 @@
         android:text="Alive"
         android:gravity="center"
         android:background="@android:color/transparent"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="50dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 
     <EditText
@@ -27,16 +31,23 @@
         android:text="Dead"
         android:gravity="center"
         android:background="@android:color/transparent"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="225dp" />
+        tools:layout_editor_absoluteY="225dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/exitGameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/exit_game"
-        tools:layout_editor_absoluteX="150dp"
-        tools:layout_editor_absoluteY="420dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 
     <ListView
@@ -50,8 +61,8 @@
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/aliveText"
         app:layout_constraintBottom_toTopOf="@+id/deadText"
-        app:layout_constraintLeft_toLeftOf="@+id/aliveText"
-        app:layout_constraintRight_toRightOf="@+id/aliveText"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 
     <ListView
@@ -65,7 +76,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/deadText"
         app:layout_constraintBottom_toTopOf="@+id/exitGameButton"
-        app:layout_constraintLeft_toLeftOf="@+id/deadText"
-        app:layout_constraintRight_toRightOf="@+id/deadText" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
