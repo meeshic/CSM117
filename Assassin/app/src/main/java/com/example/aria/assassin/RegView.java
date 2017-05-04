@@ -1,5 +1,6 @@
 package com.example.aria.assassin;
 import android.content.Intent;
+import android.os.health.PackageHealthStats;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,5 +27,16 @@ public class RegView extends AppCompatActivity{
 //            }
 //        });
 //    }
+
+    public void pressDash(View view)
+    {
+        Intent intent = new Intent(this, Dashboard.class);
+        startActivity(intent);
+    }
+
+    public void showHint(View view)
+    {
+        //new view to display number?
+    }
 
 }
