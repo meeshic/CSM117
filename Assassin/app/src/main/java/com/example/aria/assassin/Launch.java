@@ -6,8 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cz.msebera.android.httpclient.Header;
 
 public class Launch extends AppCompatActivity {
     public static final String EXTRA_USERNAME = "com.example.aria.assassin";
@@ -52,5 +59,14 @@ public class Launch extends AppCompatActivity {
         Pattern pattern = Pattern.compile("[^a-zA-Z0-9\\.\\-\\_~]");
         Matcher matcher = pattern.matcher(username);
         return !matcher.find();
+    }
+
+    public void getLobbyUsers() throws JSONException {
+        RestClient.get("game/players", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject players) {
+                // Handle JSON of players
+            }
+        });
     }
 }
