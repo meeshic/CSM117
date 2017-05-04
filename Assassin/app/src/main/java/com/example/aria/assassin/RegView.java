@@ -16,7 +16,7 @@ public class RegView extends AppCompatActivity{
     }
 
 
-    public void testButton(View view){
+//    public void testButton(View view){
 
 //        Button btnExample = (Button) findViewById(R.id/button_Dashboard);
 //        btnExample.setOnClickListener(new View.OnClickListener() {

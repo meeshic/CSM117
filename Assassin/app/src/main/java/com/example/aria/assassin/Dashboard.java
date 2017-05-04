@@ -22,15 +22,26 @@ public class Dashboard extends AppCompatActivity{
     }
 
     public void setUpView(View view){
-        final ListView listview = (ListView) findViewById(R.id.alivePlayerList);
+        final ListView listview1 = (ListView) findViewById(R.id.alivePlayerList);
         final ArrayList<String> alivePlayers = new ArrayList<String>(Arrays.asList(
                 "PlayerAlive1",
                 "PlayerAlive2",
                 "PlayerAlive3"
                 ));
-        ArrayAdapter<String> playersAdapter =
+        ArrayAdapter<String> playersAdapter1 =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alivePlayers);
-        listview.setAdapter(playersAdapter);
+        listview1.setAdapter(playersAdapter1);
+
+        final ListView listview2 = (ListView) findViewById(R.id.deadPlayerList);
+        final ArrayList<String> deadPlayers = new ArrayList<String>(Arrays.asList(
+                "PlayerDead1",
+                "PlayerDead2",
+                "PlayerDead3"
+        ));
+        ArrayAdapter<String> playersAdapter2 =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, deadPlayers);
+        listview2.setAdapter(playersAdapter2);
+
 
     }
 }
