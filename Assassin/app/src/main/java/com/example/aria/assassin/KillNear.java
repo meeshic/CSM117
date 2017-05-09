@@ -16,4 +16,13 @@ public class KillNear extends AppCompatActivity{
         setContentView(R.layout.activity_kill_near);
     }
 
+    public void pressDash(View view)
+    {
+        Intent intent = new Intent(this, RegView.class);
+        startActivity(intent);
+    }
+
+    public void onBackPressed()
+    {
+    }
 }

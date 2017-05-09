@@ -18,7 +18,7 @@
         </activity>
         <activity
             android:name=".LobbyGM"
-            android:parentActivityName=".Launch" />
+            android:parentActivityName=".Launch" ></activity>
         <activity
             android:name=".LobbyRegular"
             android:parentActivityName=".Launch"></activity>
@@ -27,7 +27,10 @@
         <activity android:name=".Dead"></activity>
         <activity android:name=".KillNear"></activity>
         <activity android:name=".GameOver"></activity>
-        <activity android:name=".Dashboard"></activity>
+        <activity
+            android:name=".Dashboard"
+             android:parentActivityName=".RegView"
+        ></activity>
     </application>
 
 </manifest>

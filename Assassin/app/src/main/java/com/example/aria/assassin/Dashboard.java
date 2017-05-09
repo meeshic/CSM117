@@ -19,14 +19,19 @@ public class Dashboard extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        setUpView();
     }
 
-    public void setUpView(View view){
+    public void setUpView(){
         final ListView listview1 = (ListView) findViewById(R.id.alivePlayerList);
         final ArrayList<String> alivePlayers = new ArrayList<String>(Arrays.asList(
                 "PlayerAlive1",
                 "PlayerAlive2",
-                "PlayerAlive3"
+                "PlayerAlive3",
+                "PlayerAlive4",
+                "PlayerAlive5",
+                "PlayerAlive6"
                 ));
         ArrayAdapter<String> playersAdapter1 =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alivePlayers);
@@ -43,6 +48,16 @@ public class Dashboard extends AppCompatActivity{
         listview2.setAdapter(playersAdapter2);
 
 
+    }
+
+    public void pressDash(View view)
+    {
+        Intent intent = new Intent(this, RegView.class);
+        startActivity(intent);
+    }
+
+    public void onBackPressed()
+    {
     }
 }
 

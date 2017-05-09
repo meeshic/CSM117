@@ -39,4 +39,7 @@ public class RegView extends AppCompatActivity{
         //new view to display number?
     }
 
+    public void onBackPressed()
+    {
+    }
 }
