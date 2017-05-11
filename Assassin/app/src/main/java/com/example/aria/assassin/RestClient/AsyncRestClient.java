@@ -1,6 +1,5 @@
-package com.example.aria.assassin;
+package com.example.aria.assassin.RestClient;
 
-import com.example.aria.assassin.RestClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
