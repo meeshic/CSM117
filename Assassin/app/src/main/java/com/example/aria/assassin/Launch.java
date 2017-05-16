@@ -175,19 +175,18 @@ public class Launch extends AppCompatActivity {
                                 String playername = player.getString("username");
                                 boolean isGM = player.getString("role").equals("GameMaster");
 
-                                // Add star to beginning of username if isGM
+                                // Set GM status of current player
+                                if (playername.equals(currentPlayer)) {
+                                    lobbyInfo.setIsGM(isGM);
+                                }
+
+                                // Add star to end of username if isGM
                                 if (isGM) {
                                     playername += " " + new String(Character.toChars(0x2B50));
                                 }
 
                                 // Add player to list
                                 lobbyInfo.addPlayer(playername);
-
-                                // Set GM status of current player
-                                if (playername.equals(currentPlayer)) {
-                                    lobbyInfo.setIsGM(isGM);
-                                }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
