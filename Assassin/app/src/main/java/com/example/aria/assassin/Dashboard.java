@@ -20,7 +20,7 @@ public class Dashboard extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ArrayList<String> alivePlayerList = new ArrayList<>();
-        ArrayList<String> playerList = new ArrayList<>();
+        ArrayList<String> deadplayerList = new ArrayList<>();
 
 
         //getActionBar().setDisplayHomeAsUpEnabled(true);
