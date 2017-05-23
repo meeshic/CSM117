@@ -11,8 +11,4 @@ public class LobbyRegular extends LobbyBase {
         setUpView();
     }
 
-    @Override
-    public void onBackPressed() {
-        exitLobby();
-    }
 }
