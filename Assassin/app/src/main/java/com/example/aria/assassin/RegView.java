@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import com.example.aria.assassin.RestClient.SyncRestClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -21,6 +23,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class RegView extends AppCompatActivity implements
         ConnectionCallbacks,
@@ -67,14 +77,54 @@ public class RegView extends AppCompatActivity implements
      */
     protected Location mCurrentLocation;
 
+    protected String username;
+
+    protected final Launch.ValContainer<String> targetName = new Launch.ValContainer<>("");
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regview);
 
+         username = getIntent().getStringExtra(Launch.EXTRA_USERNAME);
+
+        getTargetInfo();
         buildGoogleApiClient();
         createLocationRequest();
         buildLocationSettingsRequest();
         checkLocationSettings();
+    }
+
+    private void getTargetInfo() {
+        // Get target
+        Thread targetNameThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestParams params = new RequestParams();
+                params.put("username", username);
+                SyncRestClient.get("game/target", params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            targetName.setVal(response.getString("target"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Log.d("FAIL", responseString);
+                    }
+                });
+            }
+        });
+        targetNameThread.start();
+        try { targetNameThread.join(); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Set display of target name
+        TextView textView = (TextView) findViewById(R.id.targetName);
+        textView.setText(targetName.getVal());
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -208,6 +258,7 @@ public class RegView extends AppCompatActivity implements
 
     public void pressDash(View view) {
         Intent intent = new Intent(this, Dashboard.class);
+        intent.putExtra(Launch.EXTRA_USERNAME, username);
         startActivity(intent);
     }
 

@@ -28,7 +28,7 @@ public class Launch extends AppCompatActivity {
     public static final String EXTRA_USERNAME = "com.example.aria.assassin.USERNAME";
     public static final String EXTRA_LOBBY_USERS = "com.example.aria.assassin.LOBBY_USERS";
 
-    private class ValContainer<T> {
+    public static class ValContainer<T> {
         private T val;
 
         public ValContainer() {}
