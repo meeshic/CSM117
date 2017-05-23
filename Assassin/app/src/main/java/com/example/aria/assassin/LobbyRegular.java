@@ -34,24 +34,19 @@ public class LobbyRegular extends LobbyBase {
     //make continuous GET requests to Lobby to see if game in progresss
 
 
-    public boolean attemptJoinGame(){
+    public boolean attemptJoinGame() {
         RequestParams params = new RequestParams();
-        SyncRestClient.get("/game",params, new JsonHttpResponseHandler()
-        {
+        SyncRestClient.get("/game", params, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 // Username is unique
-                for(int i = 0; i < response.length(); i++)
-                {
+                for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject gameInfo = response.getJSONObject(i);
                         String gameStatus = gameInfo.getString("Status");
-                        if (gameStatus.equals("InProgress"))
-                        {
+                        if (gameStatus.equals("InProgress")) {
 //                            Intent intent = new Intent(this, RegView.class);
 //                            startActivity(intent);
-                        }
-                        else
-                        {
+                        } else {
 
                         }
                     } catch (JSONException e) {
@@ -59,10 +54,11 @@ public class LobbyRegular extends LobbyBase {
                     }
                 }
             }
+
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable e) {
                 Log.d("FAIL", responseString);
             }
-            });
+        });
 
         return false;
 
