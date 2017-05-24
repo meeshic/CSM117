@@ -11,48 +11,85 @@ import android.widget.ListView;
 
 import com.example.aria.assassin.RestClient.SyncRestClient;
 import com.loopj.android.http.BlackholeHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Dashboard extends AppCompatActivity{
 
     private String username;
+    private ArrayList<String> alivePlayers = new ArrayList<>();
+    private ArrayList<String> deadPlayers = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         username = getIntent().getStringExtra(Launch.EXTRA_USERNAME);
+        getPlayers();
         setUpView();
     }
 
     public void setUpView(){
-        final ListView listview1 = (ListView) findViewById(R.id.alivePlayerList);
-        final ArrayList<String> alivePlayers = new ArrayList<String>(Arrays.asList(
-                "PlayerAlive1",
-                "PlayerAlive2",
-                "PlayerAlive3",
-                "PlayerAlive4",
-                "PlayerAlive5",
-                "PlayerAlive6"
-                ));
-        ArrayAdapter<String> playersAdapter1 =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alivePlayers);
-        listview1.setAdapter(playersAdapter1);
+        final ListView alivePlayersView = (ListView) findViewById(R.id.alivePlayerList);
+        ArrayAdapter<String> playersAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alivePlayers);
+        alivePlayersView.setAdapter(playersAdapter1);
 
-        final ListView listview2 = (ListView) findViewById(R.id.deadPlayerList);
-        final ArrayList<String> deadPlayers = new ArrayList<String>(Arrays.asList(
-                "PlayerDead1",
-                "PlayerDead2",
-                "PlayerDead3"
-        ));
-        ArrayAdapter<String> playersAdapter2 =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, deadPlayers);
-        listview2.setAdapter(playersAdapter2);
+        final ListView deadPlayersView = (ListView) findViewById(R.id.deadPlayerList);
+        ArrayAdapter<String> playersAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, deadPlayers);
+        deadPlayersView.setAdapter(playersAdapter2);
+    }
+
+    private void getPlayers() {
+        Thread playernameThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestParams params = new RequestParams();
+                SyncRestClient.get("game/players", params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject player = response.getJSONObject(i);
+                                String playername = player.getString("username");
+                                boolean isGM = player.getString("role").equals("GameMaster");
+                                boolean isAlive = player.getBoolean("alive");
+
+                                // Add star to end of username if isGM
+                                if (isGM) {
+                                    playername += " " + new String(Character.toChars(0x2B50));
+                                }
+
+                                // Add player to list
+                                if (isAlive) {
+                                    alivePlayers.add(playername);
+                                } else {
+                                    deadPlayers.add(playername);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Log.d("FAIL", responseString);
+                    }
+                });
+            }
+        });
+        playernameThread.start();
+        try { playernameThread.join(); } catch (InterruptedException e) { e.printStackTrace(); }
     }
 
     public void pressDash(View view) {
