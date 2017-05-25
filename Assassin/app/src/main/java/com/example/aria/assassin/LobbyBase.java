@@ -34,6 +34,8 @@ public abstract class LobbyBase extends AppCompatActivity {
 
     private final int UPDATE_PLAYER_LIST_INTERVAL = 2000;
 
+    private Timer updatePlayerListTimer;
+
     public static class LobbyInfoContainer {
         private String username;
         private boolean isGM;
@@ -135,7 +137,7 @@ public abstract class LobbyBase extends AppCompatActivity {
 
     public void scheduleUpdatePlayerList() {
         final Handler handler = new Handler();
-        Timer timer = new Timer();
+        updatePlayerListTimer = new Timer();
         TimerTask updatePlayerListTask = new TimerTask() {
             @Override
             public void run() {
@@ -151,7 +153,7 @@ public abstract class LobbyBase extends AppCompatActivity {
                 });
             }
         };
-        timer.schedule(updatePlayerListTask, 0, UPDATE_PLAYER_LIST_INTERVAL); //execute in every 2000 ms
+        updatePlayerListTimer.schedule(updatePlayerListTask, 0, UPDATE_PLAYER_LIST_INTERVAL);
     }
 
     @Override
@@ -173,6 +175,9 @@ public abstract class LobbyBase extends AppCompatActivity {
     }
 
     public void exitLobby() {
+        updatePlayerListTimer.cancel();  // Terminates this timer, discarding any currently scheduled tasks.
+        updatePlayerListTimer.purge();   // Removes all cancelled tasks from this timer's task queue.
+
         final Context context = this.getApplicationContext();
         // Tell server player is leaving
         Thread exitLobbyThread = new Thread(new Runnable() {
