@@ -8,10 +8,6 @@ import android.view.View;
 import com.example.aria.assassin.RestClient.SyncRestClient;
 import com.loopj.android.http.BlackholeHttpResponseHandler;
 
-import org.json.JSONObject;
-
-import cz.msebera.android.httpclient.entity.StringEntity;
-
 public class LobbyGM extends LobbyBase {
     @Override
 

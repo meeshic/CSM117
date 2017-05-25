@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -92,8 +93,18 @@ public class Dashboard extends AppCompatActivity{
         try { playernameThread.join(); } catch (InterruptedException e) { e.printStackTrace(); }
     }
 
-    public void pressDash(View view) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            pressDash();
+            return true;
+        }
+        return false;
+    }
+
+    public void pressDash() {
         Intent intent = new Intent(this, RegView.class);
+        intent.putExtra(Launch.EXTRA_USERNAME, username);
         startActivity(intent);
     }
 

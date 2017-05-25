@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.aria.assassin.RestClient.AsyncRestClient;
 import com.example.aria.assassin.RestClient.SyncRestClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,6 +25,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.loopj.android.http.BlackholeHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -31,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class RegView extends AppCompatActivity implements
         ConnectionCallbacks,
@@ -85,7 +89,7 @@ public class RegView extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regview);
 
-         username = getIntent().getStringExtra(Launch.EXTRA_USERNAME);
+        username = getIntent().getStringExtra(Launch.EXTRA_USERNAME);
 
         getTargetInfo();
         buildGoogleApiClient();
@@ -248,8 +252,64 @@ public class RegView extends AppCompatActivity implements
             // Get last known location
             Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mLastLocation != null) {
-                Log.d(LOCATION_TAG, String.valueOf(mLastLocation.getLatitude()));
-                Log.d(LOCATION_TAG, String.valueOf(mLastLocation.getLongitude()));
+                Log.d(LOCATION_TAG, "Sending location: " +
+                                    String.valueOf(mLastLocation.getLatitude()) + ", " +
+                                    String.valueOf(mLastLocation.getLongitude()));
+                try {
+                    JSONObject jsonParams = new JSONObject();
+                    jsonParams.put("username", username);
+                    jsonParams.put("latitude", mLastLocation.getLatitude());
+                    jsonParams.put("longitude", mLastLocation.getLongitude());
+                    StringEntity data = new StringEntity(jsonParams.toString());
+                    AsyncRestClient.postJSON(this.getApplicationContext(), "game/location", data, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d(LOCATION_TAG, "Successfully sent location");
+                            try {
+                                boolean canKill = response.getBoolean("ready_for_kill");
+                                boolean inDanger = response.getBoolean("in_danger");
+                                boolean alive = response.getBoolean("alive");
+
+                                if (!alive) {
+                                    // Go to game over page
+                                    Intent nextIntent = new Intent(RegView.this, Dead.class);
+                                    startActivity(nextIntent);
+                                } else {
+                                    Button killButton = (Button) findViewById(R.id.killButton);
+                                    TextView dangerText = (TextView)findViewById(R.id.dangerText);
+
+                                    // Enable kill button if within kill radius. Else disable
+                                    if (canKill){
+                                        killButton.setEnabled(true);
+                                    } else {
+                                        killButton.setEnabled(false);
+                                    }
+
+                                    if (inDanger) {
+                                        // Display warning
+                                        dangerText.setVisibility(TextView.VISIBLE);
+                                    } else {
+                                        // Hide warning
+                                        dangerText.setVisibility(TextView.INVISIBLE);
+                                    }
+
+                                    // Display warning if in danger
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                            Log.d(LOCATION_TAG, "Failed to send location");
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (SecurityException e) {
             e.printStackTrace();
