@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aria.assassin.RestClient.AsyncRestClient;
 import com.example.aria.assassin.RestClient.SyncRestClient;
@@ -29,7 +30,6 @@ import com.loopj.android.http.BlackholeHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +43,8 @@ public class RegView extends AppCompatActivity implements
         ResultCallback<LocationSettingsResult> {
 
     protected static final String LOCATION_TAG = "RegView.LOCATION";
+    protected static final String HINT_TAG = "RegView.HINT";
+    protected static final String KILL_TAG = "RegView.KILL";
 
     /**
      * Constant used in the location settings dialog.
@@ -52,7 +54,7 @@ public class RegView extends AppCompatActivity implements
     /**
      * Interval for location updates in milliseconds
      */
-    public final int LOCATION_REQUEST_INTERVAL = 5000; // Query every 5 seconds
+    public final int LOCATION_REQUEST_INTERVAL = 2000; // Query every 2 seconds
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -75,11 +77,6 @@ public class RegView extends AppCompatActivity implements
      * settings to determine if the device has optimal location settings.
      */
     protected LocationSettingsRequest mLocationSettingsRequest;
-
-    /**
-     * Represents a geographical location.
-     */
-    protected Location mCurrentLocation;
 
     protected String username;
 
@@ -269,33 +266,51 @@ public class RegView extends AppCompatActivity implements
                                 boolean canKill = response.getBoolean("ready_for_kill");
                                 boolean inDanger = response.getBoolean("in_danger");
                                 boolean alive = response.getBoolean("alive");
+                                String target = response.getString("target");
 
-                                if (!alive) {
-                                    // Go to game over page
-                                    Intent nextIntent = new Intent(RegView.this, Dead.class);
+                                if (target.equals(username)) {
+                                    // If you are your own target. You are the winner
+                                    // Go to "winner" page
+                                    Intent nextIntent = new Intent(RegView.this, GameOver.class);
+                                    nextIntent.putExtra(Launch.EXTRA_USERNAME, username);
+                                    nextIntent.putExtra(GameOver.EXTRA_STATUS, GameOver.WINNER);
                                     startActivity(nextIntent);
                                 } else {
-                                    Button killButton = (Button) findViewById(R.id.killButton);
-                                    TextView dangerText = (TextView)findViewById(R.id.dangerText);
-
-                                    // Enable kill button if within kill radius. Else disable
-                                    if (canKill){
-                                        killButton.setEnabled(true);
-                                    } else {
-                                        killButton.setEnabled(false);
+                                    // Update target name if changed
+                                    if (!target.equals(targetName.getVal())) {
+                                        targetName.setVal(target);
+                                        // Update target value
+                                        TextView textView = (TextView) findViewById(R.id.targetName);
+                                        textView.setText(targetName.getVal());
                                     }
 
-                                    if (inDanger) {
-                                        // Display warning
-                                        dangerText.setVisibility(TextView.VISIBLE);
+                                    if (!alive) {
+                                        // Go to "dead" page
+                                        Intent nextIntent = new Intent(RegView.this, GameOver.class);
+                                        nextIntent.putExtra(Launch.EXTRA_USERNAME, username);
+                                        nextIntent.putExtra(GameOver.EXTRA_STATUS, GameOver.DEAD);
+                                        startActivity(nextIntent);
                                     } else {
-                                        // Hide warning
-                                        dangerText.setVisibility(TextView.INVISIBLE);
-                                    }
+                                        Button killButton = (Button) findViewById(R.id.killButton);
+                                        TextView dangerText = (TextView)findViewById(R.id.dangerText);
 
-                                    // Display warning if in danger
+                                        // Enable kill button if within kill radius. Else disable
+                                        if (canKill){
+                                            killButton.setEnabled(true);
+                                        } else {
+                                            killButton.setEnabled(false);
+                                        }
+
+                                        // Display warning if in danger
+                                        if (inDanger) {
+                                            // Display warning
+                                            dangerText.setVisibility(TextView.VISIBLE);
+                                        } else {
+                                            // Hide warning
+                                            dangerText.setVisibility(TextView.INVISIBLE);
+                                        }
+                                    }
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -323,7 +338,45 @@ public class RegView extends AppCompatActivity implements
     }
 
     public void showHint(View view) {
-        //new view to display number?
+        try {
+            RequestParams params = new RequestParams();
+            params.put("hunter", username);
+            params.put("target", targetName.getVal());
+            AsyncRestClient.get("game/hint", params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d(HINT_TAG, "Successfully got hint");
+                    try {
+                        int dist = response.getInt("distance");
+
+                        Toast.makeText(getApplicationContext(), "Approx. distance: " + dist + "m",
+                                Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Log.d(HINT_TAG, "Failed to get hint");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pressKill(View view) {
+        try {
+            JSONObject jsonParams = new JSONObject();
+            jsonParams.put("hunter", username);
+            jsonParams.put("target", targetName.getVal());
+            StringEntity data = new StringEntity(jsonParams.toString());
+            AsyncRestClient.postJSON(this.getApplicationContext(), "game/kill", data, new BlackholeHttpResponseHandler());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

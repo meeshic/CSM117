@@ -20,7 +20,7 @@ public class LobbyGM extends LobbyBase {
 
 
     public void startGame(View view) {
-        final Context context = this.getApplicationContext();
+        playerListHandler.removeCallbacks(checkPlayerListRunnable);
         // Tell server to start game
         Intent intent = new Intent(this, RegView.class);
         intent.putExtra(Launch.EXTRA_USERNAME, username);

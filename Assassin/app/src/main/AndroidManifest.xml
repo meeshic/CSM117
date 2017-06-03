@@ -24,7 +24,6 @@
             android:name=".LobbyRegular"
             android:parentActivityName=".Launch"></activity>
         <activity android:name=".RegView"></activity>
-        <activity android:name=".Dead"></activity>
         <activity android:name=".GameOver"></activity>
         <activity
             android:name=".Dashboard"
