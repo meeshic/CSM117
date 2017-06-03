@@ -12,9 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.aria.assassin.RestClient.AsyncRestClient;
 import com.example.aria.assassin.RestClient.SyncRestClient;
-import com.google.android.gms.common.api.Result;
 import com.loopj.android.http.BlackholeHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -24,8 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -99,6 +95,19 @@ public abstract class LobbyBase extends AppCompatActivity {
         }
     }
 
+    public final Handler playerListHandler = new Handler();
+    public final Runnable checkPlayerListRunnable = new Runnable() {
+        public void run() {
+            try {
+                QueryPlayerList query = new QueryPlayerList();
+                query.execute(username);
+                playerListHandler.postDelayed(checkPlayerListRunnable, UPDATE_PLAYER_LIST_INTERVAL);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
     protected String username;
 
     @Override
@@ -134,24 +143,7 @@ public abstract class LobbyBase extends AppCompatActivity {
     }
 
     public void scheduleUpdatePlayerList() {
-        final Handler handler = new Handler();
-        Timer timer = new Timer();
-        TimerTask updatePlayerListTask = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        try {
-                            QueryPlayerList query = new QueryPlayerList();
-                            query.execute(username);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        };
-        timer.schedule(updatePlayerListTask, 0, UPDATE_PLAYER_LIST_INTERVAL); //execute in every 2000 ms
+        playerListHandler.post(checkPlayerListRunnable);
     }
 
     @Override
@@ -173,6 +165,7 @@ public abstract class LobbyBase extends AppCompatActivity {
     }
 
     public void exitLobby() {
+        playerListHandler.removeCallbacks(checkPlayerListRunnable);
         final Context context = this.getApplicationContext();
         // Tell server player is leaving
         Thread exitLobbyThread = new Thread(new Runnable() {

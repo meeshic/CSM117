@@ -3,20 +3,59 @@ package com.example.aria.assassin;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.aria.assassin.RestClient.SyncRestClient;
+import com.example.aria.assassin.RestClient.AsyncRestClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
-import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class LobbyRegular extends LobbyBase {
+
+    private final int CHECK_GAME_STATUS_INTERVAL = 2000;
+
+    private final Handler checkGameHandler = new Handler();
+    private final Runnable checkGameStatusRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                AsyncRestClient.get("game", null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            String status = response.getString("status");
+
+                            if (status.equals("InProgress")) {
+                                // Go to next screen.
+                                checkGameHandler.removeCallbacks(checkGameStatusRunnable);
+                                Intent intent = new Intent(LobbyRegular.this, RegView.class);
+                                intent.putExtra(Launch.EXTRA_USERNAME, username);
+                                startActivity(intent);
+                            }
+                            // Still waiting for game to start
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Log.d("FAIL", responseString);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            checkGameHandler.postDelayed(checkGameStatusRunnable, CHECK_GAME_STATUS_INTERVAL);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,43 +64,13 @@ public class LobbyRegular extends LobbyBase {
         setUpView();
     }
 
+    public void scheduleUpdatePlayerList() {
+        checkGameHandler.post(checkGameStatusRunnable);
+    }
+
     @Override
-    public void onBackPressed() {
-        exitLobby();
+    public void exitLobby() {
+        checkGameHandler.removeCallbacks(checkGameStatusRunnable);
+        super.exitLobby();
     }
-
-
-    //make continuous GET requests to Lobby to see if game in progresss
-
-
-    public boolean attemptJoinGame() {
-        RequestParams params = new RequestParams();
-        SyncRestClient.get("/game", params, new JsonHttpResponseHandler() {
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                // Username is unique
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject gameInfo = response.getJSONObject(i);
-                        String gameStatus = gameInfo.getString("Status");
-                        if (gameStatus.equals("InProgress")) {
-//                            Intent intent = new Intent(this, RegView.class);
-//                            startActivity(intent);
-                        } else {
-
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable e) {
-                Log.d("FAIL", responseString);
-            }
-        });
-
-        return false;
-
-    }
-
 }
