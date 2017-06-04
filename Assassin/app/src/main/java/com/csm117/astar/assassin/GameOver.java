@@ -1,12 +1,11 @@
-package com.example.aria.assassin;
+package com.csm117.astar.assassin;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.aria.assassin.RestClient.AsyncRestClient;
+import com.csm117.astar.assassin.RestClient.AsyncRestClient;
 import com.loopj.android.http.BlackholeHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -15,7 +14,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class GameOver extends AppCompatActivity{
 
-    public static final String EXTRA_STATUS = "com.example.aria.assassin.STATUS";
+    public static final String EXTRA_STATUS = "com.csm117.astar.assassin.STATUS";
     public static final int DEAD = 0;
     public static final int WINNER = 1;
 

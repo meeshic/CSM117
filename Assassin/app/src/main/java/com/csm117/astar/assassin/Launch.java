@@ -1,4 +1,4 @@
-package com.example.aria.assassin;
+package com.csm117.astar.assassin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.aria.assassin.RestClient.SyncRestClient;
+import com.csm117.astar.assassin.RestClient.SyncRestClient;
 import com.loopj.android.http.BlackholeHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -25,8 +25,8 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Launch extends AppCompatActivity {
-    public static final String EXTRA_USERNAME = "com.example.aria.assassin.USERNAME";
-    public static final String EXTRA_LOBBY_USERS = "com.example.aria.assassin.LOBBY_USERS";
+    public static final String EXTRA_USERNAME = "com.csm117.astar.assassin.USERNAME";
+    public static final String EXTRA_LOBBY_USERS = "com.csm117.astar.assassin.LOBBY_USERS";
 
     public static class ValContainer<T> {
         private T val;
@@ -47,7 +47,7 @@ public class Launch extends AppCompatActivity {
     }
 
     private enum Validity {
-        VALID, NOT_UNIQUE, INVALID
+        VALID, NOT_UNIQUE, INVALID, FORBIDDEN
     }
 
     @Override
@@ -94,8 +94,10 @@ public class Launch extends AppCompatActivity {
                 usernameField.setError("Username cannot be empty");
             } else if (usernameValid == Validity.INVALID) {
                 usernameField.setError("Usernames can only contain the following characters: alphanumeric, ., -, _, ~");
-            } else {
+            } else if (usernameValid == Validity.NOT_UNIQUE){
                 usernameField.setError("This username is already taken");
+            } else {
+                usernameField.setError("Game is already in progress. Please try again later.");
             }
         }
     }
@@ -129,6 +131,22 @@ public class Launch extends AppCompatActivity {
                     public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable e) {
                         // Username is not unique
                         usernameValidity.setVal(Validity.NOT_UNIQUE);
+                    }
+                });
+                SyncRestClient.get("game", params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            // Success response means a game exists. Check if it has already started.
+                            String status = response.getString("status");
+
+                            if (!status.equals("SettingUp")) {
+                                // Game is already in progress. Cannot enter.
+                                usernameValidity.setVal(Validity.FORBIDDEN);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }

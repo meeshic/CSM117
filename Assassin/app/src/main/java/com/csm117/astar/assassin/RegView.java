@@ -1,4 +1,4 @@
-package com.example.aria.assassin;
+package com.csm117.astar.assassin;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aria.assassin.RestClient.AsyncRestClient;
-import com.example.aria.assassin.RestClient.SyncRestClient;
+import com.csm117.astar.assassin.RestClient.AsyncRestClient;
+import com.csm117.astar.assassin.RestClient.SyncRestClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -44,7 +44,6 @@ public class RegView extends AppCompatActivity implements
 
     protected static final String LOCATION_TAG = "RegView.LOCATION";
     protected static final String HINT_TAG = "RegView.HINT";
-    protected static final String KILL_TAG = "RegView.KILL";
 
     /**
      * Constant used in the location settings dialog.
@@ -268,7 +267,13 @@ public class RegView extends AppCompatActivity implements
                                 boolean alive = response.getBoolean("alive");
                                 String target = response.getString("target");
 
-                                if (target.equals(username)) {
+                                if (!alive) {
+                                    // Go to "dead" page
+                                    Intent nextIntent = new Intent(RegView.this, GameOver.class);
+                                    nextIntent.putExtra(Launch.EXTRA_USERNAME, username);
+                                    nextIntent.putExtra(GameOver.EXTRA_STATUS, GameOver.DEAD);
+                                    startActivity(nextIntent);
+                                } else if (target.equals(username)) {
                                     // If you are your own target. You are the winner
                                     // Go to "winner" page
                                     Intent nextIntent = new Intent(RegView.this, GameOver.class);
@@ -276,39 +281,31 @@ public class RegView extends AppCompatActivity implements
                                     nextIntent.putExtra(GameOver.EXTRA_STATUS, GameOver.WINNER);
                                     startActivity(nextIntent);
                                 } else {
+                                    TextView targetText = (TextView) findViewById(R.id.targetName);
+                                    Button killButton = (Button) findViewById(R.id.killButton);
+                                    TextView dangerText = (TextView)findViewById(R.id.dangerText);
+
                                     // Update target name if changed
                                     if (!target.equals(targetName.getVal())) {
                                         targetName.setVal(target);
                                         // Update target value
-                                        TextView textView = (TextView) findViewById(R.id.targetName);
-                                        textView.setText(targetName.getVal());
+                                        targetText.setText(targetName.getVal());
                                     }
 
-                                    if (!alive) {
-                                        // Go to "dead" page
-                                        Intent nextIntent = new Intent(RegView.this, GameOver.class);
-                                        nextIntent.putExtra(Launch.EXTRA_USERNAME, username);
-                                        nextIntent.putExtra(GameOver.EXTRA_STATUS, GameOver.DEAD);
-                                        startActivity(nextIntent);
+                                    // Enable kill button if within kill radius. Else disable
+                                    if (canKill){
+                                        killButton.setEnabled(true);
                                     } else {
-                                        Button killButton = (Button) findViewById(R.id.killButton);
-                                        TextView dangerText = (TextView)findViewById(R.id.dangerText);
+                                        killButton.setEnabled(false);
+                                    }
 
-                                        // Enable kill button if within kill radius. Else disable
-                                        if (canKill){
-                                            killButton.setEnabled(true);
-                                        } else {
-                                            killButton.setEnabled(false);
-                                        }
-
-                                        // Display warning if in danger
-                                        if (inDanger) {
-                                            // Display warning
-                                            dangerText.setVisibility(TextView.VISIBLE);
-                                        } else {
-                                            // Hide warning
-                                            dangerText.setVisibility(TextView.INVISIBLE);
-                                        }
+                                    // Display warning if in danger
+                                    if (inDanger) {
+                                        // Display warning
+                                        dangerText.setVisibility(TextView.VISIBLE);
+                                    } else {
+                                        // Hide warning
+                                        dangerText.setVisibility(TextView.INVISIBLE);
                                     }
                                 }
                             } catch (JSONException e) {

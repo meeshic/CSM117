@@ -1,4 +1,4 @@
-package com.example.aria.assassin;
+package com.csm117.astar.assassin;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.aria.assassin", appContext.getPackageName());
+        assertEquals("com.csm117.astar.assassin", appContext.getPackageName());
     }
 }

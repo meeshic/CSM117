@@ -1,11 +1,10 @@
-package com.example.aria.assassin;
+package com.csm117.astar.assassin;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
 
-import com.example.aria.assassin.RestClient.SyncRestClient;
+import com.csm117.astar.assassin.RestClient.SyncRestClient;
 import com.loopj.android.http.BlackholeHttpResponseHandler;
 
 public class LobbyGM extends LobbyBase {

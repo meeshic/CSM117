@@ -1,4 +1,4 @@
-package com.example.aria.assassin;
+package com.csm117.astar.assassin;
 
 import org.junit.Test;
 
