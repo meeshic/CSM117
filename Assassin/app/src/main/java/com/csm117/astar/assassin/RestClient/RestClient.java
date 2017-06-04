@@ -1,6 +1,4 @@
-package com.example.aria.assassin.RestClient;
-
-import com.loopj.android.http.*;
+package com.csm117.astar.assassin.RestClient;
 
 public class RestClient {
     private static final String BASE_URL = "https://assassin-server-csm117.herokuapp.com/";

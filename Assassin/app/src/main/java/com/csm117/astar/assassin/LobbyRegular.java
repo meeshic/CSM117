@@ -1,19 +1,18 @@
-package com.example.aria.assassin;
+package com.csm117.astar.assassin;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.aria.assassin.RestClient.AsyncRestClient;
+import com.csm117.astar.assassin.RestClient.AsyncRestClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.os.Handler;
-import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class LobbyRegular extends LobbyBase {
 
@@ -46,7 +45,11 @@ public class LobbyRegular extends LobbyBase {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                        Log.d("FAIL", responseString);
+                        Toast.makeText(getApplicationContext(), "Lobby was closed. Please enter again.",
+                                Toast.LENGTH_LONG).show();
+                        checkGameHandler.removeCallbacks(checkGameStatusRunnable);
+                        Intent intent = new Intent(LobbyRegular.this, Launch.class);
+                        startActivity(intent);
                     }
                 });
             } catch (Exception e) {
@@ -62,9 +65,10 @@ public class LobbyRegular extends LobbyBase {
         setContentView(R.layout.activity_lobby_regular);
 
         setUpView();
+        scheduleCheckGameStatus();
     }
 
-    public void scheduleUpdatePlayerList() {
+    public void scheduleCheckGameStatus() {
         checkGameHandler.post(checkGameStatusRunnable);
     }
 
