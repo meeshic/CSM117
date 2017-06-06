@@ -53,7 +53,7 @@ public class RegView extends AppCompatActivity implements
     /**
      * Interval for location updates in milliseconds
      */
-    public final int LOCATION_REQUEST_INTERVAL = 2000; // Query every 2 seconds
+    public final int LOCATION_REQUEST_INTERVAL = 500; // Query every 0.5 seconds
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -267,6 +267,9 @@ public class RegView extends AppCompatActivity implements
                                 boolean alive = response.getBoolean("alive");
                                 String target = response.getString("target");
 
+                                Log.d("LOC_RET", "Can kill: " + canKill);
+                                Log.d("LOC_RET", "In danger: " + inDanger);
+                                Log.d("LOC_RET", "Alive: " + alive);
                                 if (!alive) {
                                     // Go to "dead" page
                                     Intent nextIntent = new Intent(RegView.this, GameOver.class);
