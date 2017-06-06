@@ -1,4 +1,4 @@
-Assassin::Client
+# Assassin::Client
 
 Server side located at https://github.com/llam15/assassin-server.
 
