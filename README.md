@@ -1,4 +1,6 @@
-# Insert Spiffy Title Here
+Assassin::Client
+
+Server side located at https://github.com/llam15/assassin-server.
 
 Completed for CS M117 during the Spring 2017 quarter at UCLA. 
 
@@ -13,3 +15,8 @@ Team:
 TA: 
 
 * [Reuben Vincent Rabsatt](http://web.cs.ucla.edu/~rrabsatt/)
+
+## License
+
+`assassin-server` is an open source project, with its code under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
